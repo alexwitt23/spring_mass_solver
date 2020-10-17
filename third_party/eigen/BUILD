@@ -11,57 +11,9 @@ licenses([
 
 exports_files(["LICENSE"])
 
-EIGEN3_THIRD_PARTY_HEADERS = [
-    "Eigen/Core",
-    "Eigen/LU",
-    "Eigen/Cholesky",
-    "Eigen/Eigenvalues",
-    "Eigen/OrderingMethods",
-    "Eigen/QR",
-    "Eigen/SparseCholesky",
-    "Eigen/SparseCore",
-    "Eigen/SVD",
-]
 
 cc_library(
     name = "eigen3",
-    hdrs = EIGEN3_THIRD_PARTY_HEADERS,
+    hdrs = glob(["Eigen/**/*"]),
     visibility = ["//visibility:public"],
-    deps = [
-        "@eigen_archive//:eigen",
-    ],
-)
-
-filegroup(
-    name = "all_files",
-    srcs = glob(
-        ["**/*"],
-        exclude = ["**/OWNERS"],
-    ),
-    visibility = ["//tensorflow:__subpackages__"],
-)
-
-filegroup(
-    name = "eigen_third_party_header_files",
-    srcs = EIGEN3_THIRD_PARTY_HEADERS,
-    visibility = ["//visibility:public"],
-)
-
-genrule(
-    name = "install_eigen_headers",
-    srcs = [
-        "@eigen_archive//:eigen_header_files",
-        ":eigen_third_party_header_files",
-    ],
-    outs = ["include"],
-    cmd = """
-    mkdir $@
-    for f in $(SRCS); do
-      d="$${f%/*}"
-      d="$${d#*external/eigen_archive/}"
-      mkdir -p "$@/$${d}"
-      cp "$${f}" "$@/$${d}/"
-    done
-    """,
-    tags = ["manual"],
 )
