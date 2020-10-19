@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-""" Main python script for solving spring-mass systems. 
-"""
+""" Main python script for solving spring-mass systems. """
+
+__author__ = "Alex Witt <awitt2399@utexas.edu>"
 
 
 import argparse
