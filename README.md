@@ -21,6 +21,6 @@ An example system with a fixed top and 5 springs and 5 masses:
 ```
 python/main.py \
     --fix_top \
-    --masses "1,2,3,4,5" \
-    --spring_constants "5,4,3,2,1"
+    --masses "1.5,2.4,3.3,4.2,5.1" \
+    --spring_constants "5.5,4.4,3.3,2.2,1.1"
 ```
