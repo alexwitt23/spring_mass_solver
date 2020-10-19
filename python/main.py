@@ -82,20 +82,19 @@ def solve_system(
 
     f = return_force_vector(masses)
 
-    return np.linalg.pinv(A.transpose() * C * A) * f
+    # Now solve the force balance equation: f = A.transpose() * w
+    w = np.linalg.pinv(A.transpose()) * f
+
+    # Next, solve the internal force equations: w = Ce
+    e = np.linalg.pinv(C) * w
+
+    # Finally, compute the displacements using: e = Au
+    u = np.linalg.pinv(A) * e
+    return u
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Spring mass solver.")
-    parser.add_argument(
-        "--num_springs",
-        type=int,
-        default=4,
-        help="The number of springs in the system.",
-    )
-    parser.add_argument(
-        "--num_masses", type=int, default=3, help="The number of masses in the system."
-    )
     parser.add_argument(
         "--spring_constants",
         type=str,
@@ -122,18 +121,11 @@ if __name__ == "__main__":
 
     # Do some general args processing to ensure a feasible system.
     spring_constants = [float(c.strip()) for c in args.spring_constants.split(",")]
-    assert (
-        len(spring_constants) == args.num_springs
-    ), "Ensure the number of springs and number of spring constants is equal!"
-
     masses = [float(c.strip()) for c in args.masses.split(",")]
-    assert (
-        len(masses) == args.num_masses
-    ), "Ensure the number of physical masses and number of supplied masses is equal!"
 
     displacements = solve_system(
-        args.num_springs,
-        args.num_masses,
+        len(spring_constants),
+        len(masses),
         spring_constants,
         masses,
         args.fix_top,
